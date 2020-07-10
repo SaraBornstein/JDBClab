@@ -1,7 +1,7 @@
 package sara.jdbc;
 
 //POJO that matches table
-public class ToBeRead {
+public class Book {
 
     int id;
     String title;
@@ -9,7 +9,9 @@ public class ToBeRead {
     int pages;
 
     //constructor
-    public ToBeRead(int id, String title, String author, int pages) {
+    public Book() {
+    }
+    public Book(int id, String title, String author, int pages) {
         this.id = id;
         this.title = title;
         this.author = author;
