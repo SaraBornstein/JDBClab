@@ -24,13 +24,12 @@ import java.util.ArrayList;
 public class JDBCLab {
 
     public static void main(String[] args) {
-        DBCrud lab = new DBCrud();
-        boolean success = lab.run();
-
-        if (success){
-            System.out.println("Yay!");
-        } else {
-            System.out.println("Boo");
-        }
+        DBCrud lab = new DBCrud(); //create new object of class DBCrud
+        boolean success = lab.run(); //use the object to call the run method from the other class, use the boolean to find out if it ran or not
+            if (success){
+                System.out.println("Lab ran successfully!");
+            } else {
+                System.out.println("Lab failed.");
+            }
     }
 }

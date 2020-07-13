@@ -26,6 +26,9 @@ public class DBCrud {
             deleteBook(b);
 
             //TODO: Call method that will query all records from DB and map to array list of books and print tostring for each book
+            insertRecord("Insert Book 1", "Author Num 1", 200);
+            insertRecord("Insert Book 2", "Author Num 2", 400);
+            mapResultSetToObjects();
 
             //closing connections
             closeConnections();
@@ -36,46 +39,6 @@ public class DBCrud {
             System.out.println(e.getMessage());
             return false;
         }
-    }
-
-    private void deleteBook(Book b) throws SQLException {
-        statement.executeUpdate("DELETE from JDBClab.to_be_read where id = " + b.getId());
-        System.out.println("Book with " + b.getId() + " deleted");
-    }
-
-    private void updateBookLength(Book b, int length) throws SQLException {
-        statement.executeUpdate("UPDATE JDBClab.to_be_read set pages = " + length + " where id = " + b.getId());
-        System.out.println("Book updated to length " + length + " pages");
-    }
-
-    private Book findBookByTitle(String aTitle) throws SQLException {
-        resultSet = statement.executeQuery("select * from JDBClab.to_be_read WHERE title = \"" + aTitle + "\";");
-        Book b = mapResultSetToBook(resultSet);
-        System.out.println("Book found with Title: " + b.getTitle());
-        return b;
-    }
-
-    private Book mapResultSetToBook(ResultSet resultSet) throws SQLException {
-        Book b = new Book();
-        resultSet.next();
-        b.setId(resultSet.getInt("id"));
-        b.setTitle(resultSet.getString("title"));
-        b.setAuthor(resultSet.getString("author"));
-        b.setPages(resultSet.getInt("pages"));
-
-        return b;
-    }
-
-    private void insertRecord(String title, String author, int pages) throws SQLException {
-        StringBuilder insert = new StringBuilder();
-        insert.append("INSERT INTO JDBClab.to_be_read (title, author, pages) VALUES ('");
-        insert.append(title);
-        insert.append("', '");
-        insert.append(author);
-        insert.append("', ");
-        insert.append(pages).append(")");
-        statement.executeUpdate(insert.toString());
-        System.out.println("Book inserted with  title: " + title);
     }
 
     private void initializeConnection() throws Exception {
@@ -99,17 +62,57 @@ public class DBCrud {
         } catch (SQLException e) {
             throw new Exception("Could not create statement");
         }
-
     }
 
-    private void closeConnections() throws SQLException {
-        // close all JDBC elements
-        statement.close();
-        //resultSet.close();
-        connection.close();
-        System.out.println("Connections closed");
+    private void insertRecord(String title, String author, int pages) throws SQLException {
+        StringBuilder insert = new StringBuilder();
+        insert.append("INSERT INTO JDBClab.to_be_read (title, author, pages) VALUES ('");
+        insert.append(title);
+        insert.append("', '");
+        insert.append(author);
+        insert.append("', ");
+        insert.append(pages).append(")");
+        statement.executeUpdate(insert.toString());
+        System.out.println("Book inserted with  title: " + title);
     }
 
+    private Book findBookByTitle(String aTitle) throws SQLException {
+        resultSet = statement.executeQuery("select * from JDBClab.to_be_read WHERE title = \"" + aTitle + "\";");
+        Book b = mapResultSetToBook(resultSet);
+        System.out.println("Book found with Title: " + b.getTitle());
+        return b;
+    }
+
+    private void updateBookLength(Book b, int length) throws SQLException {
+        statement.executeUpdate("UPDATE JDBClab.to_be_read set pages = " + length + " where id = " + b.getId());
+        System.out.println("Book updated to length " + length + " pages");
+    }
+
+    private void deleteBook(Book b) throws SQLException {
+        statement.executeUpdate("DELETE from JDBClab.to_be_read where id = " + b.getId());
+        System.out.println("Book with " + b.getId() + " deleted");
+    }
+
+    private Book mapResultSetToBook(ResultSet resultSet) throws SQLException {
+        Book b = new Book();
+        resultSet.next();
+        b.setId(resultSet.getInt("id"));
+        b.setTitle(resultSet.getString("title"));
+        b.setAuthor(resultSet.getString("author"));
+        b.setPages(resultSet.getInt("pages"));
+
+        return b;
+    }
+
+    private void mapResultSetToObjects() throws SQLException {
+        resultSet = statement.executeQuery("select * from JDBClab.to_be_read;");
+        // call method to map ResultSet to ArrayList of objects
+        ArrayList<Book> books = mapResultSetToObjects(resultSet);
+        // use a for-each loop to print out each object
+        for (Book b : books)
+            System.out.println(b.toString());
+
+    }
 
     private ArrayList<Book> mapResultSetToObjects(ResultSet resultSet) throws SQLException {
         ArrayList<Book> retList = new ArrayList();
@@ -123,5 +126,13 @@ public class DBCrud {
             retList.add(tbr);
         }
         return retList;
+    }
+
+    private void closeConnections() throws SQLException {
+        // close all JDBC elements
+        statement.close();
+        //resultSet.close();
+        connection.close();
+        System.out.println("Connections closed");
     }
 }

@@ -3,12 +3,13 @@ package sara.jdbc;
 //POJO that matches table
 public class Book {
 
+    //instance variables that match table columns
     int id;
     String title;
     String author;
     int pages;
 
-    //constructor
+    //constructors (without arguments, with arguments)
     public Book() {
     }
     public Book(int id, String title, String author, int pages) {
